@@ -1,0 +1,20 @@
+from fastapi import FastAPI
+import joblib
+import numpy as np
+from pydantic import BaseModel
+
+app = FastAPI()
+
+# Load trained model and scaler
+model = joblib.load("C:/Users/THANMAI REDDY/Documents/AnomolyDetection_Project/isolation_forest.pkl")
+scaler = joblib.load("C:/Users/THANMAI REDDY/Documents/AnomolyDetection_Project/scaler.pkl")
+
+# Define the expected JSON input structure
+class DataInput(BaseModel):
+    data: list  # This ensures FastAPI expects a JSON list
+
+@app.post("/predict")
+async def predict_anomaly(input_data: DataInput):
+    scaled_data = scaler.transform([input_data.data])  # Apply scaling
+    prediction = model.predict(scaled_data)  # Make prediction
+    return {"anomaly_detected": int(prediction[0])}  # Return result
