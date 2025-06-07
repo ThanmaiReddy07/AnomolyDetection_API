@@ -6,8 +6,8 @@ from pydantic import BaseModel
 app = FastAPI()
 
 # Load trained model and scaler
-model = joblib.load("C:/Users/THANMAI REDDY/Documents/AnomolyDetection_Project/isolation_forest.pkl")
-scaler = joblib.load("C:/Users/THANMAI REDDY/Documents/AnomolyDetection_Project/scaler.pkl")
+model = joblib.load("isolation_forest.pkl")
+scaler = joblib.load("scaler.pkl")
 
 # Define the expected JSON input structure
 class DataInput(BaseModel):
