@@ -14,12 +14,14 @@ scaler = joblib.load(os.path.join(BASE_DIR, "scaler.pkl"))
 # Define the expected JSON input structure
 class DataInput(BaseModel):
     data: list  # This ensures FastAPI expects a JSON list
-
 @app.post("/predict")
 async def predict_anomaly(input_data: DataInput):
-    scaled_data = scaler.transform([input_data.data])  # Apply scaling
-    prediction = model.predict(scaled_data)  # Make prediction
-    return {"anomaly_detected": int(prediction[0])}  # Return result
+    try:
+        scaled_data = scaler.transform([input_data.data])  # Apply scaling
+        prediction = model.predict(scaled_data)  # Make prediction
+        return {"anomaly_detected": int(prediction[0])}
+    except Exception as e:
+        return {"error": str(e)}  # Send back the error message for debugging
 @app.get("/")
 def home():
     return {"message": "Welcome to Thanmai's Anomaly Detection API!"}
