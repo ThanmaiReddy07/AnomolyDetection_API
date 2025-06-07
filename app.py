@@ -18,3 +18,10 @@ async def predict_anomaly(input_data: DataInput):
     scaled_data = scaler.transform([input_data.data])  # Apply scaling
     prediction = model.predict(scaled_data)  # Make prediction
     return {"anomaly_detected": int(prediction[0])}  # Return result
+@app.get("/")
+def home():
+    return {"message": "Welcome to Thanmai's Anomaly Detection API!"}
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
