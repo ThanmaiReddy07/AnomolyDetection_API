@@ -17,11 +17,19 @@ class DataInput(BaseModel):
 @app.post("/predict")
 async def predict_anomaly(input_data: DataInput):
     try:
-        scaled_data = scaler.transform([input_data.data])  # Apply scaling
-        prediction = model.predict(scaled_data)  # Make prediction
+        # Convert input into NumPy array while ensuring correct shape
+        feature_array = np.array([input_data.data]).reshape(1, -1)  # Reshape ensures compatibility
+        
+        # Scale input
+        scaled_data = scaler.transform(feature_array)  
+        
+        # Make prediction
+        prediction = model.predict(scaled_data)  
+        
         return {"anomaly_detected": int(prediction[0])}
+    
     except Exception as e:
-        return {"error": str(e)}  # Send back the error message for debugging
+        return {"error": f"Prediction failed: {str(e)}"}  # Improved error reporting
 @app.get("/")
 def home():
     return {"message": "Welcome to Thanmai's Anomaly Detection API!"}
