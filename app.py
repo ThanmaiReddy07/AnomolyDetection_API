@@ -1,13 +1,15 @@
 from fastapi import FastAPI
 import joblib
+import os
 import numpy as np
 from pydantic import BaseModel
 
 app = FastAPI()
 
 # Load trained model and scaler
-model = joblib.load("isolation_forest.pkl")
-scaler = joblib.load("scaler.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model = joblib.load(os.path.join(BASE_DIR, "isolation_forest.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "scaler.pkl"))
 
 # Define the expected JSON input structure
 class DataInput(BaseModel):
